@@ -6,6 +6,8 @@ import androidx.recyclerview.widget.RecyclerView
 import ru.netology.R
 import ru.netology.databinding.CardPostBinding
 import ru.netology.dto.Post
+import java.math.BigDecimal
+import java.math.RoundingMode
 
 typealias OnLikeListener = (post: Post) -> Unit
 typealias OnShareListener = (post: Post) -> Unit
@@ -48,17 +50,34 @@ class PostViewHolder(
             likePic.setImageResource(
                 if (!post.likedByMe) R.drawable.like else R.drawable.like_pressed
             )
-            likesCount.text = post.likes.toString()
 
+            likesCount.text = showCount(post.likes)
             likePic.setOnClickListener {
                 onLikeListener(post)
-                likesCount.text = post.likes.toString()
             }
-            shareCount.text = post.shares.toString()
+
+            shareCount.text = showCount(post.shares)
             sharePic.setOnClickListener {
                 onShareListener(post)
-                shareCount.text = post.shares.toString()
             }
+        }
+    }
+
+    private fun showCount(count: Int): String {
+        return if (count < 1_000) {
+            count.toString()
+        } else if (count in 1_000..9_999) {
+            if ((count / 100) % 10 == 0) {
+                "${count / 1_000}K"
+            } else {
+                "${BigDecimal(count / 1000.0).setScale(1, RoundingMode.FLOOR)}K"
+            }
+        } else if (count in 10_000..999_999) {
+            "${count / 10_00}K"
+        } else if ((count % 1_000_000) < 100_000) {
+            "${count / 1_000_000}M"
+        } else {
+            return "${BigDecimal(count / 1000000.0).setScale(1, RoundingMode.FLOOR)}M"
         }
     }
 }
