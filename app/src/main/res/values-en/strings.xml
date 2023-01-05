@@ -3,4 +3,12 @@
     <string name="app_name">NMedia</string>
     <string name="nmedia">NMedia!</string>
     <string name="group_name">Netology. Changing careers through education </string>
+    <string name="menu_edit">Edit</string>
+    <string name="menu_remove">Remove</string>
+    <string name="description_post_menu">Post menu</string>
+    <string name="description_post_like">Like</string>
+    <string name="description_post_share">Share</string>
+    <string name="description_post_save">Save</string>
+    <string name="post_text">Post\'s text</string>
+    <string name="error_empty_content">Content can\'t be empty</string>
 </resources>
