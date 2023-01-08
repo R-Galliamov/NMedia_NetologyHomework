@@ -62,17 +62,14 @@ class PostViewHolder(
                     }
                 }.show()
             }
+            likeButton.isChecked = post.likedByMe
+            likeButton.text = showCount(post.likes)
 
-            likeButton.setImageResource(
-                if (!post.likedByMe) R.drawable.like else R.drawable.like_pressed
-            )
-
-            likesCount.text = showCount(post.likes)
             likeButton.setOnClickListener {
                 onInteractionListener.onLike(post)
             }
 
-            shareCount.text = showCount(post.shares)
+           shareButton.text = showCount(post.shares)
             shareButton.setOnClickListener {
                 onInteractionListener.shareById(post)
             }
