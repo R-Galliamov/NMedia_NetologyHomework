@@ -3,6 +3,8 @@ package ru.netology.adapter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.PopupMenu
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import ru.netology.R
 import ru.netology.databinding.CardPostBinding
@@ -13,12 +15,7 @@ import java.math.RoundingMode
 class PostsAdapter(
     private val onInteractionListener: OnInteractionListener
 ) :
-    RecyclerView.Adapter<PostViewHolder>() {
-    var list = emptyList<Post>()
-        set(value) {
-            field = value
-            notifyDataSetChanged()
-        }
+    ListAdapter<Post, PostViewHolder>(PostDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PostViewHolder {
         val binding = CardPostBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -26,11 +23,9 @@ class PostsAdapter(
     }
 
     override fun onBindViewHolder(holder: PostViewHolder, position: Int) {
-        val post = list[position]
+        val post = getItem(position)
         holder.bind(post)
     }
-
-    override fun getItemCount(): Int = list.size
 }
 
 class PostViewHolder(
@@ -69,7 +64,7 @@ class PostViewHolder(
                 onInteractionListener.onLike(post)
             }
 
-           shareButton.text = showCount(post.shares)
+            shareButton.text = showCount(post.shares)
             shareButton.setOnClickListener {
                 onInteractionListener.shareById(post)
             }
@@ -92,5 +87,15 @@ class PostViewHolder(
         } else {
             return "${BigDecimal(count / 1000000.0).setScale(1, RoundingMode.FLOOR)}M"
         }
+    }
+}
+
+class PostDiffCallback : DiffUtil.ItemCallback<Post>() {
+    override fun areItemsTheSame(oldItem: Post, newItem: Post): Boolean {
+        return oldItem.id == newItem.id
+    }
+
+    override fun areContentsTheSame(oldItem: Post, newItem: Post): Boolean {
+        return oldItem == newItem
     }
 }

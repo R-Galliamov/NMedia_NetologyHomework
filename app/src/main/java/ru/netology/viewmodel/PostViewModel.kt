@@ -28,6 +28,10 @@ class PostViewModel : ViewModel() {
         edited.value?.let {
             repository.save(it)
         }
+        clearEdited()
+    }
+
+    fun clearEdited(){
         edited.value = empty
     }
 

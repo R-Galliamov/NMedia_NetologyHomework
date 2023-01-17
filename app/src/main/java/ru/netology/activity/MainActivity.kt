@@ -12,6 +12,7 @@ import ru.netology.adapter.OnInteractionListener
 import ru.netology.adapter.PostsAdapter
 import ru.netology.databinding.ActivityMainBinding
 import ru.netology.dto.Post
+import ru.netology.repository.PostRepositoryInMemoryImpl
 import ru.netology.util.AndroidUtils
 import ru.netology.viewmodel.PostViewModel
 
@@ -48,7 +49,7 @@ class MainActivity : AppCompatActivity() {
 
         binding.list.adapter = adapter
         viewModel.data.observe(this) { posts ->
-            adapter.list = posts
+            adapter.submitList(posts)
         }
 
         viewModel.edited.observe(this) { post ->
@@ -84,6 +85,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun clearEditTextContent() {
         with(binding.editTextContent) {
+            viewModel.clearEdited()
             setText("")
             clearFocus()
             AndroidUtils.hideKeyboard(this)
