@@ -66,8 +66,6 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun onShare(post: Post) {
-
-
                 //startActivity(shareIntent)
                 sendPostLauncher.launch(post)
             }

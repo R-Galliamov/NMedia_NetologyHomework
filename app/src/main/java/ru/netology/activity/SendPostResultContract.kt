@@ -9,7 +9,7 @@ import ru.netology.dto.Post
 class SendPostResultContract : ActivityResultContract<Post, Long?>() {
     val POST_ID = "postId"
     override fun createIntent(context: Context, input: Post): Intent =
-        Intent(context, IntentHandlerActivity::class.java).apply {
+        Intent(context, SendPostActivity::class.java).apply {
             putExtra(POST_ID, input.id)
             action = Intent.ACTION_SEND
             putExtra(Intent.EXTRA_TEXT, input.content)
