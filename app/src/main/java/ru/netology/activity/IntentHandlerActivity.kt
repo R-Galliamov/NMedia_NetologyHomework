@@ -1,5 +1,6 @@
 package ru.netology.activity
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
@@ -29,6 +30,7 @@ class IntentHandlerActivity : AppCompatActivity() {
                     .show()
             } else {
                 Snackbar.make(binding.root, text, LENGTH_LONG).show()
+                setResult(Activity.RESULT_OK, intent)
             }
         }
     }
