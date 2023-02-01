@@ -9,4 +9,6 @@
     <color name="white">#FFFFFFFF</color>
     <color name="red_500">#FFFF0505</color>
     <color name="gray_500">#FFA4A4A4</color>
+    <color name="blue_gray_50">#FFECEFF1</color>
+    <color name="teal_100_transparent">#70b2dfdb</color>
 </resources>

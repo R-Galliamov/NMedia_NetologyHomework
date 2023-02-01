@@ -1,9 +1,12 @@
 package ru.netology.activity
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.widget.EditText
 import android.widget.Toast
+import androidx.activity.result.launch
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.textfield.TextInputEditText
@@ -20,10 +23,33 @@ class MainActivity : AppCompatActivity() {
 
     val viewModel: PostViewModel by viewModels()
     private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
+
+    private val newPostLauncher = registerForActivityResult(NewPostResultContract()) { result ->
+        result ?: return@registerForActivityResult
+        viewModel.changeContent(result)
+        viewModel.save()
+    }
+
+    private val editPostLauncher = registerForActivityResult(EditPostResultContract()) { result ->
+        result ?: return@registerForActivityResult
+        viewModel.changeContent(result)
+        viewModel.save()
+    }
+
     private val interactionListener by lazy {
         object : OnInteractionListener {
+            override fun onOpenVideo(post: Post) {
+                viewModel.openVideo(post)
+                val openVideoIntent = Intent().apply {
+                    action = Intent.ACTION_VIEW
+                    data = Uri.parse(post.video_url)
+                }
+                startActivity(openVideoIntent)
+            }
+
             override fun onEdit(post: Post) {
                 viewModel.edit(post)
+                editPostLauncher.launch(post.content)
             }
 
             override fun onLike(post: Post) {
@@ -34,7 +60,18 @@ class MainActivity : AppCompatActivity() {
                 viewModel.removeById(post.id)
             }
 
-            override fun shareById(post: Post) {
+            override fun onShare(post: Post) {
+
+                val intent = Intent().apply {
+                    action = Intent.ACTION_SEND
+                    putExtra(Intent.EXTRA_TEXT, post.content)
+                    type = "text/plain"
+                }
+
+                val shareIntent =
+                    Intent.createChooser(intent, getString(R.string.chooser_share_post))
+                startActivity(shareIntent)
+
                 viewModel.shareById(post.id)
             }
         }
@@ -44,7 +81,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
-
         val adapter = PostsAdapter(interactionListener)
 
         binding.list.adapter = adapter
@@ -52,44 +88,14 @@ class MainActivity : AppCompatActivity() {
             adapter.submitList(posts)
         }
 
+        binding.fab.setOnClickListener {
+            newPostLauncher.launch()
+        }
+
         viewModel.edited.observe(this) { post ->
-            if (post.id != 0L) {
-                with(binding.editTextContent) {
-                    requestFocus()
-                    setText(post.content)
-                    binding.cancelButton.visibility = View.VISIBLE
-                }
+            if (post.id == 0L) {
+                return@observe
             }
-        }
-
-        binding.saveButton.setOnClickListener {
-            with(binding.editTextContent) {
-                if (text.isNullOrBlank()) {
-                    Toast.makeText(
-                        this@MainActivity,
-                        context.getString(R.string.error_empty_content),
-                        Toast.LENGTH_SHORT
-                    ).show()
-                } else {
-                    viewModel.changeContent(text.toString())
-                    viewModel.save()
-                    clearEditTextContent()
-                }
-            }
-        }
-
-        binding.cancelButton.setOnClickListener {
-            clearEditTextContent()
-        }
-    }
-
-    private fun clearEditTextContent() {
-        with(binding.editTextContent) {
-            viewModel.clearEdited()
-            setText("")
-            clearFocus()
-            AndroidUtils.hideKeyboard(this)
-            binding.cancelButton.visibility = View.GONE
         }
     }
 }
