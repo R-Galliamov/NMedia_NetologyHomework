@@ -3,20 +3,15 @@ package ru.netology.activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.view.View
-import android.widget.EditText
-import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.result.launch
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import com.google.android.material.textfield.TextInputEditText
 import ru.netology.R
 import ru.netology.adapter.OnInteractionListener
 import ru.netology.adapter.PostsAdapter
 import ru.netology.databinding.ActivityMainBinding
 import ru.netology.dto.Post
-import ru.netology.repository.PostRepositoryInMemoryImpl
-import ru.netology.util.AndroidUtils
 import ru.netology.viewmodel.PostViewModel
 
 class MainActivity : AppCompatActivity() {
@@ -36,10 +31,11 @@ class MainActivity : AppCompatActivity() {
         viewModel.save()
     }
 
-    private val sendPostLauncher = registerForActivityResult(SendPostResultContract()) { result ->
-        result ?: return@registerForActivityResult
-        viewModel.shareById(result)
-    }
+    private val sendPostLauncher =
+        registerForActivityResult(SendPostResultContract()) { result ->
+            result ?: return@registerForActivityResult
+            result.getStringExtra("post_id")?.let { viewModel.shareById(it.toLong()) }
+        }
 
     private val interactionListener by lazy {
         object : OnInteractionListener {
@@ -66,8 +62,15 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun onShare(post: Post) {
-                //startActivity(shareIntent)
-                sendPostLauncher.launch(post)
+                val intent = Intent().apply {
+                    action = Intent.ACTION_SEND
+                    putExtra("post_id", post.id)
+                    putExtra(Intent.EXTRA_TEXT, post.content)
+                    type = "text/plain"
+                }
+                val shareIntent =
+                    Intent.createChooser(intent, getString(R.string.chooser_share_post))
+                sendPostLauncher.launch(shareIntent)
             }
         }
     }
@@ -93,4 +96,6 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
+
+
 }
