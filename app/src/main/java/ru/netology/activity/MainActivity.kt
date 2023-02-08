@@ -31,12 +31,6 @@ class MainActivity : AppCompatActivity() {
         viewModel.save()
     }
 
-    private val sendPostLauncher =
-        registerForActivityResult(SendPostResultContract()) { result ->
-            result ?: return@registerForActivityResult
-            result.getStringExtra("post_id")?.let { viewModel.shareById(it.toLong()) }
-        }
-
     private val interactionListener by lazy {
         object : OnInteractionListener {
             override fun onOpenVideo(post: Post) {
@@ -64,13 +58,13 @@ class MainActivity : AppCompatActivity() {
             override fun onShare(post: Post) {
                 val intent = Intent().apply {
                     action = Intent.ACTION_SEND
-                    putExtra("post_id", post.id)
                     putExtra(Intent.EXTRA_TEXT, post.content)
                     type = "text/plain"
                 }
                 val shareIntent =
                     Intent.createChooser(intent, getString(R.string.chooser_share_post))
-                sendPostLauncher.launch(shareIntent)
+                startActivity(shareIntent)
+                viewModel.shareById(post.id)
             }
         }
     }
