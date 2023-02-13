@@ -4,18 +4,36 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activity.NewPostActivity">
+    tools:context=".activity.NewPostFragment">
 
-    <EditText
-        android:id="@+id/edit"
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/cancel_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|bottom"
+        android:layout_marginBottom="@dimen/large_spacing"
+        android:layout_marginEnd="@dimen/common_spacing"
+        android:src="@drawable/icon_clear"
+        android:backgroundTint="@color/blue_gray_50"
+        />
+
+    <ScrollView
+        android:id="@+id/scroll_field"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="@dimen/common_spacing"
-        android:gravity="start|top"
-        android:inputType="textMultiLine"
-        android:background="@android:color/transparent"
-        tools:text="@sample/posts.json/data/content"
-        />
+        android:layout_marginBottom="@dimen/bottom_app_bar_margin">
+
+        <EditText
+            android:id="@+id/edit"
+            android:layout_margin="@dimen/common_spacing"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="start|top"
+            android:inputType="textMultiLine"
+            android:background="@android:color/transparent"
+            tools:text="@sample/posts.json/data/content"
+            />
+    </ScrollView>
 
     <com.google.android.material.bottomappbar.BottomAppBar
         android:id="@+id/bottomAppBar"

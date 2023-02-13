@@ -5,7 +5,7 @@
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activity.MainActivity">
+    tools:context=".activity.FeedFragment">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/list"
@@ -14,21 +14,7 @@
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintTop_toTopOf="parent"
         tools:itemCount="3"
-        tools:listitem="@layout/card_post" />
-
-    <ImageButton
-        android:id="@+id/cancel_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/common_spacing"
-        android:background="@android:color/transparent"
-        android:contentDescription="@string/description_post_like"
-        app:layout_constraintBottom_toTopOf="@id/fab"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/fab"
-        android:layout_marginBottom="@dimen/little_spacing"
-        app:srcCompat="@drawable/icon_clear"
-        android:visibility="gone"/>
+        tools:listitem="@layout/fragment_card_post" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab"

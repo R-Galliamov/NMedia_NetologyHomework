@@ -1,6 +1,7 @@
 package ru.netology.repository
 
 import android.content.Context
+import android.provider.Settings.Global.putLong
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.gson.Gson
@@ -14,10 +15,13 @@ class PostRepositoryFileImpl(
     private val type = TypeToken.getParameterized(List::class.java, Post::class.java).type
     private val filename = "posts.json"
     private var nextId = 1L
+    private val prefs = context.getSharedPreferences("prefs", Context.MODE_PRIVATE)
     private var posts = emptyList<Post>()
     private val data = MutableLiveData(posts)
 
     init {
+        nextId = prefs.getLong("nextId", 1)
+
         val file = context.filesDir.resolve(filename)
         if (file.exists()) {
             context.openFileInput(filename).bufferedReader().use {
@@ -30,6 +34,10 @@ class PostRepositoryFileImpl(
     }
 
     override fun getAll(): LiveData<List<Post>> = data
+
+    override fun getPostById(id: Long) : Post? {
+        return posts.find { it.id == id }
+    }
 
     override fun save(post: Post) {
         posts = if (post.id == 0L) {
@@ -48,6 +56,7 @@ class PostRepositoryFileImpl(
             }
         }
         data.value = posts
+        saveNextId()
         sync()
     }
 
@@ -82,6 +91,13 @@ class PostRepositoryFileImpl(
     private fun sync() {
         context.openFileOutput(filename, Context.MODE_PRIVATE).bufferedWriter().use {
             it.write(gson.toJson(posts))
+        }
+    }
+
+    private fun saveNextId(){
+       prefs.edit().run{
+            putLong("nextId", nextId)
+            apply()
         }
     }
 }

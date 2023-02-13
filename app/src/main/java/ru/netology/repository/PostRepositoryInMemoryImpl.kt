@@ -7,6 +7,9 @@ import ru.netology.dto.Post
 class PostRepositoryInMemoryImpl : PostRepository {
     var nextId = 1L
 
+    override fun getPostById(id: Long): Post? {
+        TODO("Not yet implemented")
+    }
     private var posts = listOf(
         Post(
             id = nextId++,

@@ -3,33 +3,30 @@ package ru.netology.activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.activity.result.launch
-import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import ru.netology.R
+import ru.netology.activity.CardPostFragment.Companion.postId
+import ru.netology.activity.NewPostFragment.Companion.textArg
 import ru.netology.adapter.OnInteractionListener
 import ru.netology.adapter.PostsAdapter
-import ru.netology.databinding.ActivityMainBinding
+import ru.netology.databinding.FragmentFeedBinding
 import ru.netology.dto.Post
+import ru.netology.util.StringArg
 import ru.netology.viewmodel.PostViewModel
 
-class MainActivity : AppCompatActivity() {
+class FeedFragment : Fragment() {
 
-    val viewModel: PostViewModel by viewModels()
-    private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
 
-    private val newPostLauncher = registerForActivityResult(NewPostResultContract()) { result ->
-        result ?: return@registerForActivityResult
-        viewModel.changeContent(result)
-        viewModel.save()
-    }
+    private var _binding: FragmentFeedBinding? = null
+    private val binding: FragmentFeedBinding
+        get() = _binding!!
 
-    private val editPostLauncher = registerForActivityResult(EditPostResultContract()) { result ->
-        result ?: return@registerForActivityResult
-        viewModel.changeContent(result)
-        viewModel.save()
-    }
+    private val viewModel: PostViewModel by viewModels(ownerProducer = ::requireParentFragment)
 
     private val interactionListener by lazy {
         object : OnInteractionListener {
@@ -42,9 +39,15 @@ class MainActivity : AppCompatActivity() {
                 startActivity(openVideoIntent)
             }
 
+            override fun onItem(post: Post) {
+                findNavController().navigate(R.id.action_feedFragment_toCardPostFragment,
+                    Bundle().apply { postId = post.id })
+            }
+
             override fun onEdit(post: Post) {
                 viewModel.edit(post)
-                editPostLauncher.launch(post.content)
+                findNavController().navigate(R.id.action_feedFragment_toEditPostFragment,
+                    Bundle().apply { textArg = post.content })
             }
 
             override fun onLike(post: Post) {
@@ -69,27 +72,41 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(binding.root)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        _binding = FragmentFeedBinding.inflate(
+            inflater,
+            container,
+            false
+        )
+        return binding.root
+    }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         val adapter = PostsAdapter(interactionListener)
-
         binding.list.adapter = adapter
-        viewModel.data.observe(this) { posts ->
+
+        viewModel.data.observe(viewLifecycleOwner) { posts ->
             adapter.submitList(posts)
         }
 
         binding.fab.setOnClickListener {
-            newPostLauncher.launch()
+            findNavController().navigate(R.id.action_feedFragment_toNewPostFragment)
         }
 
-        viewModel.edited.observe(this) { post ->
+        viewModel.edited.observe(viewLifecycleOwner) { post ->
             if (post.id == 0L) {
                 return@observe
             }
         }
     }
 
-
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
 }
