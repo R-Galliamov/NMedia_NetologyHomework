@@ -1,6 +1,5 @@
 package ru.netology.adapter
 
-import android.os.IBinder
 import android.view.View
 import android.widget.PopupMenu
 import androidx.recyclerview.widget.RecyclerView
@@ -25,7 +24,7 @@ class PostViewHolder(
                 onInteractionListener.onItem(post)
             }
 
-            if (post.video_url != null) {
+            if (post.videoUrl != null) {
                 videoContainer.visibility = View.VISIBLE
             } else {
                 videoContainer.visibility = View.GONE

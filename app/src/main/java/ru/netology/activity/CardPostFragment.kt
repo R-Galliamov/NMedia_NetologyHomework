@@ -8,7 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import ru.netology.R
 import ru.netology.activity.NewPostFragment.Companion.textArg
@@ -37,7 +36,7 @@ class CardPostFragment : Fragment() {
                 viewModel.openVideo(post)
                 val openVideoIntent = Intent().apply {
                     action = Intent.ACTION_VIEW
-                    data = Uri.parse(post.video_url)
+                    data = Uri.parse(post.videoUrl)
                 }
                 startActivity(openVideoIntent)
             }

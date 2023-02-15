@@ -16,11 +16,9 @@ import ru.netology.adapter.OnInteractionListener
 import ru.netology.adapter.PostsAdapter
 import ru.netology.databinding.FragmentFeedBinding
 import ru.netology.dto.Post
-import ru.netology.util.StringArg
 import ru.netology.viewmodel.PostViewModel
 
 class FeedFragment : Fragment() {
-
 
     private var _binding: FragmentFeedBinding? = null
     private val binding: FragmentFeedBinding
@@ -34,7 +32,7 @@ class FeedFragment : Fragment() {
                 viewModel.openVideo(post)
                 val openVideoIntent = Intent().apply {
                     action = Intent.ACTION_VIEW
-                    data = Uri.parse(post.video_url)
+                    data = Uri.parse(post.videoUrl)
                 }
                 startActivity(openVideoIntent)
             }
