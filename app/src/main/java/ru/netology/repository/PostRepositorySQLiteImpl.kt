@@ -1,13 +1,12 @@
 package ru.netology.repository
 
-import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import ru.netology.dao.PostDao
+import ru.netology.dao.PostDaoSQLite
 import ru.netology.dto.Post
 
 class PostRepositorySQLiteImpl(
-    private val dao: PostDao,
+    private val dao: PostDaoSQLite,
 ) : PostRepository {
     private var posts = emptyList<Post>()
     private val data = MutableLiveData(posts)

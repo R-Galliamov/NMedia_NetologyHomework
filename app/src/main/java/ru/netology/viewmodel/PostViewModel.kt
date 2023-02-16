@@ -2,12 +2,13 @@ package ru.netology.viewmodel
 
 import android.app.Application
 import android.content.Context
-import android.content.Context.MODE_PRIVATE
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import ru.netology.db.AppDb
+import ru.netology.db.AppDbSQLite
 import ru.netology.dto.Post
 import ru.netology.repository.PostRepository
+import ru.netology.repository.PostRepositoryImpl
 import ru.netology.repository.PostRepositorySQLiteImpl
 
 private val empty = Post(
@@ -19,7 +20,7 @@ private val empty = Post(
 )
 
 open class PostViewModel(application: Application) : AndroidViewModel(application) {
-    private val repository: PostRepository = PostRepositorySQLiteImpl(AppDb.getInstance(application).postDao)
+    private val repository: PostRepository = PostRepositoryImpl(AppDb.getInstance(context = application).postDao())
     val data = repository.getAll()
     val edited = MutableLiveData(empty)
     val prefs = application.getSharedPreferences("draft", Context.MODE_PRIVATE)
