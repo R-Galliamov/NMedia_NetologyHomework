@@ -5,11 +5,9 @@ import android.content.Context
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import ru.netology.db.AppDb
-import ru.netology.db.AppDbSQLite
 import ru.netology.dto.Post
 import ru.netology.repository.PostRepository
 import ru.netology.repository.PostRepositoryImpl
-import ru.netology.repository.PostRepositorySQLiteImpl
 
 private val empty = Post(
     id = 0,

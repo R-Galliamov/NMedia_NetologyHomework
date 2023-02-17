@@ -13,4 +13,10 @@
     <string name="error_empty_content">Content can\'t be empty</string>
     <string name="chooser_share_post">Share</string>
     <string name="add_post">Создать пост</string>
+    <string name="google_play_unavailable">Google Api Unavailable</string>
+    <string name="notification_user_liked">User %1$s liked %2$s\'s post</string>
+    <string name="notification_new_post">%1$s posted:</string>
+    <string name="channel_remote_name">Server notifications</string>
+    <string name="channel_remote_description">Notifications from remote server</string>
+    <string name="push_type_not_identified">Push type not identified</string>
 </resources>

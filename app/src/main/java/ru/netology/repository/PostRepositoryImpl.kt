@@ -1,10 +1,8 @@
 package ru.netology.repository
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import ru.netology.dao.PostDao
-import ru.netology.dao.PostDaoSQLite
 import ru.netology.dto.Post
 import ru.netology.entity.PostEntity
 
